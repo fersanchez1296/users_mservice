@@ -1,5 +1,5 @@
 import encryptPassword from "../utils/encrypt_password.utils.js";
-import { postRegistrarUsuario } from "../../../auth_mservice/src/repository/index.repository.js";
+import { postRegistrarUsuario } from "../repository/index.repository.js";
 
 export const register = async (req, res) => {
     const { user } = req.session;
