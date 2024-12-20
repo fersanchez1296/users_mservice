@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
-import usuariosRoutes from "./routes/v1/usuarios.routes.js"
+import usuariosRoutes from "./routes/v1/usuarios.routes.js";
 
 morgan.token("date", function () {
   return new Date().toISOString();
@@ -14,7 +14,7 @@ const format =
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:4000", //API Gateway
+    origin: ["http://api-gateway:4000", "http://localhost:3000"], //API Gateway
     //origin: "*",
     credentials: true,
   })
@@ -26,6 +26,6 @@ app.use(usuariosRoutes);
 
 connectDB();
 
-if(app.listen(process.env.PORT)){
-    console.log(`Servidor corriendo en el puerto ${process.env.PORT}`)
+if (app.listen(process.env.PORT)) {
+  console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
 }

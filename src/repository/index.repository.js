@@ -11,3 +11,12 @@ export const postRegistrarUsuario = async (body, Password) => {
     return false;
   }
 };
+
+export const getUsuarios = async () => {
+  try {
+    const RES = await Usuario.find().lean();
+    return RES;
+  } catch (error) {
+    return false;
+  }
+};

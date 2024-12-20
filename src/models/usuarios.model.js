@@ -22,7 +22,7 @@ const usuarioModel = mongoose.Schema(
       trim: true,
       required: true,
     },
-    Area: [{ type: mongoose.Schema.Types.ObjectId }],
+    Area: [{ type: mongoose.Schema.Types.ObjectId, ref: "Area" }],
     Correo: {
       type: String,
       trim: true,
