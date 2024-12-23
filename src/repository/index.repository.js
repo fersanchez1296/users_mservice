@@ -20,3 +20,20 @@ export const getUsuarios = async () => {
     return false;
   }
 };
+
+export const updateUsusario = async (estado, userId) => {
+  console.log("Parametros en el repositorio =>", userId, estado);
+  try {
+    const RES = await Usuario.findOneAndUpdate(
+      { _id: userId },
+      { $set: { isActive: estado } }
+    );
+    console.log(RES);
+    if (RES.modifiedCount === 0) {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

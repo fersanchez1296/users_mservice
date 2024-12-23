@@ -1,5 +1,9 @@
 import encryptPassword from "../utils/encrypt_password.utils.js";
-import { postRegistrarUsuario, getUsuarios } from "../repository/index.repository.js";
+import {
+  postRegistrarUsuario,
+  getUsuarios,
+  updateUsusario,
+} from "../repository/index.repository.js";
 
 export const register = async (req, res) => {
   const { user } = req.session;
@@ -20,16 +24,34 @@ export const register = async (req, res) => {
   }
 };
 
-
 export const obtenerUsuarios = async (req, res, next) => {
   try {
     const usuarios = await getUsuarios();
-    if(!usuarios){
-      return res.status(404).json({desc: "No se encontraron usuarios"});
+    if (!usuarios) {
+      return res.status(404).json({ desc: "No se encontraron usuarios" });
     }
     req.usuarios = usuarios;
-    next()
+    next();
   } catch (error) {
-    return res.status(500).json({desc: "Error interno en el servidor"})
+    return res.status(500).json({ desc: "Error interno en el servidor" });
   }
-}
+};
+
+export const actualizarUsuario = async (req, res) => {
+  const userId = req.params.id;
+  const { estado } = req.body;
+  console.log("Parametros en el controlador =>", userId, estado);
+  try {
+    const result = await updateUsusario(estado, userId);
+    if (!result) {
+      return res.status(400).json({
+        desc: "Ocurrio un error al actualizar el estado del usuario",
+      });
+    }
+    return res
+      .status(200)
+      .json({ desc: "Estado del usuario actualizado con exito" });
+  } catch (error) {
+    return res.status(500).json({ desc: "Error interno en el servidor" });
+  }
+};

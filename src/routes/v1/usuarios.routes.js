@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   obtenerUsuarios,
   register,
+  actualizarUsuario
 } from "../../controllers/usuarios.controller.js";
 import { validateData } from "../../middlewares/validate_data.middleware.js";
 import { verifyToken } from "../../middlewares/verify_token.middleware.js";
@@ -34,5 +35,8 @@ router.get(
 
 router.put(
   "/users/:id",
+  verifyToken,
+  verifyRole("Root"),
+  actualizarUsuario,
 );
 export default router;
