@@ -2,7 +2,6 @@ import connectDB from "./db/db_connection.js";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import "dotenv/config";
 import cookieParser from "cookie-parser";
 import usuariosRoutes from "./routes/v1/usuarios.routes.js";
 
@@ -14,7 +13,10 @@ const format =
 const app = express();
 app.use(
   cors({
-    origin: ["http://api-gateway:4000", "http://localhost:3000"], //API Gateway
+    origin: [
+      `http://${process.env.APIGATEWAY_SERVICE_HOST}:${process.env.APIGATEWAY_SERVICE_PORT}`,
+      "http://localhost:3000",
+    ], //API Gateway
     //origin: "*",
     credentials: true,
   })
@@ -26,6 +28,6 @@ app.use(usuariosRoutes);
 
 connectDB();
 
-if (app.listen(process.env.PORT)) {
-  console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
+if (app.listen(process.env.USERS_SERVICE_PORT)) {
+  console.log(`Servidor corriendo en el puerto ${process.env.USERS_SERVICE_PORT}`);
 }
