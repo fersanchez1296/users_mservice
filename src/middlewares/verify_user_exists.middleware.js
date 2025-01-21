@@ -1,12 +1,12 @@
 import Usuarios from "../models/usuarios.model.js";
 
 export const verifyUserExists = async (req, res, next) => {
-  const { username } = req.body;
+  const {Correo}  = req.body;
   try {
     const result = await Usuarios.find({
-      username: username,
+      correo: Correo,
     });
-    if (result.length === 0) {
+    if (result) {
       next();
     } else {
       return res.status(409).json({ desc: "El usuario ya existe" });

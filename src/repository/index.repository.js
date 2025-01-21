@@ -1,9 +1,44 @@
 import Usuario from "../models/usuarios.model.js";
+import ROLES from "../models/roles.model.js";
+import AREA from "../models/area.model.js"
+import DIRECCION_GENERAL from "../models/direccion_general.model.js";
+import COORDINACIONES from "../models/coordinaciones.model.js"
+import DEPENDENCIAS from "../models/dependencias.model.js"
+export const getInfoSelectsCrearUsuario = async () => {
+  // Se agrego un gion bajo (_) al final del nombre de las constantes para evitar tener errores
+  // con el nombre de los modelos
+  try {
+    const [
+      //DIRECCIONESGENERALES_,
+      AREAS_,
+      ROLES_,
+      DIRECCIONESGENERALES_,
+      COORDINACIONES_,
+      DEPENDENCIAS_,
+    ] = await Promise.all([
+      AREA.find(),
+      ROLES.find(),
+      DIRECCION_GENERAL.find(),
+      COORDINACIONES.find(),
+      DEPENDENCIAS.find(),
+    ]);
+    return {
+      areas: AREAS_,
+      direccion_generales: DIRECCIONESGENERALES_,
+      roles: ROLES_,
+      coordinaciones: COORDINACIONES_,
+      dependencias: DEPENDENCIAS_,
+    };
+  } catch (error) {
+    return false;
+  }
+};
+
 export const postRegistrarUsuario = async (body, Password) => {
   try {
     const RES = new Usuario({
       ...body,
-      password: Password,
+      Password,
     });
     RES.save();
     return RES;
@@ -21,7 +56,7 @@ export const getUsuarios = async () => {
   }
 };
 
-export const updateUsusario = async (estado, userId) => {
+export const updateEstadoUsusario = async (estado, userId) => {
   console.log("Parametros en el repositorio =>", userId, estado);
   try {
     const RES = await Usuario.findOneAndUpdate(
@@ -37,3 +72,29 @@ export const updateUsusario = async (estado, userId) => {
     return false;
   }
 };
+
+export const updateUser = async (updatedata, userId) => {
+  console.log("Datos a actualizar", updatedata);
+  console.log("User id", userId);
+  try {
+    // Buscar y actualizar al usuario
+    const updatedUser = await Usuario.findByIdAndUpdate(
+      userId,            // ID del usuario a actualizar
+      updatedata,        // Datos a actualizar
+      { new: true }      // Retorna el documento actualizado
+    );
+
+    // Verifica si se encontró el usuario
+    if (!updatedata) {
+      return { error: 'Usuario no encontrado' };
+    }
+    console.log("Usuario actualizado");
+    return updatedUser;
+  } catch (error) {
+    console.error('Error al actualizar el usuario:', error);
+    return { error: 'Error al actualizar el usuario' };
+  }
+};
+
+
+

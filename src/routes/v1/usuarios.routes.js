@@ -2,7 +2,9 @@ import { Router } from "express";
 import {
   obtenerUsuarios,
   register,
-  actualizarUsuario
+  actualizarUsuario,
+  actualizarestadoUsuario,
+  getInfoSelectsUsuarios
 } from "../../controllers/usuarios.controller.js";
 import { validateData } from "../../middlewares/validate_data.middleware.js";
 import { verifyToken } from "../../middlewares/verify_token.middleware.js";
@@ -10,14 +12,18 @@ import { verifyRole } from "../../middlewares/verify_role.middleware.js";
 import { verifyUserExists } from "../../middlewares/verify_user_exists.middleware.js";
 import { formatearCamposFecha } from "../../middlewares/formatear_fechas.middleware.js";
 import { populateUsuarios } from "../../middlewares/populate_usuarios.middleware.js";
+import { generatePassword } from "../../middlewares/generador.password.js";
+import { generateUsername } from "../../middlewares/generador.username.js";
 const router = Router();
 
 router.post(
-  "/users",
+  "/users/crear",
   verifyToken,
   verifyRole("Root"),
+  validateData,
   verifyUserExists,
-  validateData("usuarios"),
+  generateUsername,
+  generatePassword,
   register
 );
 router.get(
@@ -25,7 +31,7 @@ router.get(
   verifyToken,
   verifyRole("Root"),
   obtenerUsuarios,
-  formatearCamposFecha,
+  //formatearCamposFecha,
   populateUsuarios
 );
 
@@ -37,6 +43,19 @@ router.put(
   "/users/:id",
   verifyToken,
   verifyRole("Root"),
+  actualizarestadoUsuario,
+);
+
+router.put(
+  "/users/editar/:id",
+  verifyToken,
+  verifyRole("Root"),
   actualizarUsuario,
+);
+
+router.get("/users/usuarios/roles",
+  verifyToken,
+  verifyRole("Root"),
+  getInfoSelectsUsuarios,
 );
 export default router;

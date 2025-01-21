@@ -18,18 +18,18 @@ const usuarioModel = mongoose.Schema(
       required: true,
     },
     Rol: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       trim: true,
       required: true,
     },
-    Area: [{ type: mongoose.Schema.Types.ObjectId, ref: "Area" }],
+    Area: [{ type: mongoose.Schema.Types.ObjectId }],
     Correo: {
       type: String,
       trim: true,
       required: true,
     },
     Coordinacion: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       trim: true,
       required: true,
     },
@@ -38,23 +38,13 @@ const usuarioModel = mongoose.Schema(
       trim: true,
       required: true,
     },
-    Fecha_creacion: {
-      type: Date,
-      trim: true,
-      required: true,
-    },
-    Fecha_baja: {
-      type: Date,
-      trim: true,
-      required: true,
-    },
     Dependencia: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       trim: true,
       required: true,
     },
     Direccion_general: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       trim: true,
       required: true,
     },

@@ -1,17 +1,18 @@
-import * as Schemas from "../schemas/usuarios.schema.js";
+import usuariosSchema from "../schemas/usuarios.schema.js";
 
-export const validateData = (schemaName) => {
-  return (req, res, next) => {
-    const schema = Schemas[`${schemaName}Schema`];
-    if (!schema) {
-      return res.status(400).json({ error: "Nombre de Esquema inválido" });
-    }
-    const { error } = schema.validate(req.body);
-    if (error) {
-      return res
-        .status(400)
-        .json({ error: error.details?.[0]?.message || "Error de validacion" });
-    }
-    next();
-  };
+export const validateData = (req, res, next) => {
+  console.log(req.body);
+  delete req.body._id;
+  delete req.body.Username;
+  delete req.body.Password;
+  delete req.body.__v;
+  delete req.body.id;
+  console.log("Datos en validate data", req.body);
+  const { error } = usuariosSchema.validate(req.body);
+  if (error) {
+    return res
+      .status(400)
+      .json({ error: error.details?.[0]?.message || "Error de validacion" });
+  }
+  next();
 };
