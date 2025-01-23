@@ -50,22 +50,32 @@ export const getInfoSelectsUsuarios = async (req, res) => {
   }
 };
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
   const { user } = req.session;
   if (!user) return res.status(403).json({ desc: "Acceso no autorizado" });
   const pass = req.body.Password;
   const hashedPassword = await encryptPassword(pass);
   try {
     const newUsuario = await postRegistrarUsuario(req.body, hashedPassword);
-    if (newUsuario) {
-      res.status(200).json({ desc: "Usuario Registrado Correctamente" });
-    } else {
-      res
-        .status(500)
-        .json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
+    if (!newUsuario) {
+      return res.status(500).json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
     }
+    const correoData = {
+      username: req.body.Username,
+      correoDestinatario: req.body.Correo,
+      //correoRemitente: user.correo,
+      nombreUsuario: req.body.Nombre,
+      password: req.body.Password,
+    };
+    console.log("Correo Data", correoData);
+    req.correoData = correoData;
+    req.channel = "channel_crearUsuario";
+    console.log("Se guardo el usuario");
+    next();
+
   } catch (error) {
-    console.log(error);
+    console.error("Error al crear el usuario", error);
+    res.status(500).json({ error: "Error al crear el usuario" });
   }
 };
 

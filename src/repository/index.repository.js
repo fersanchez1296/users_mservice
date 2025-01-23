@@ -43,6 +43,7 @@ export const postRegistrarUsuario = async (body, Password) => {
     RES.save();
     return RES;
   } catch (error) {
+    console.log("No se esta guardando el usuario");
     return false;
   }
 };

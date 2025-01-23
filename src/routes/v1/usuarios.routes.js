@@ -14,6 +14,7 @@ import { formatearCamposFecha } from "../../middlewares/formatear_fechas.middlew
 import { populateUsuarios } from "../../middlewares/populate_usuarios.middleware.js";
 import { generatePassword } from "../../middlewares/generador.password.js";
 import { generateUsername } from "../../middlewares/generador.username.js";
+import { enviarCorreo } from "../../middlewares/enviarCorreo.middleware.js";
 const router = Router();
 
 router.post(
@@ -24,7 +25,8 @@ router.post(
   verifyUserExists,
   generateUsername,
   generatePassword,
-  register
+  register,
+  enviarCorreo
 );
 router.get(
   "/users",
