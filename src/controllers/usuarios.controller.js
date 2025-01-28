@@ -82,7 +82,7 @@ export const register = async (req, res, next) => {
 export const obtenerUsuarios = async (req, res, next) => {
   try {
     const usuarios = await getUsuarios();
-    console.log(usuarios);
+    // console.log(usuarios);
     if (!usuarios) {
       return res.status(404).json({ desc: "No se encontraron usuarios" });
     }

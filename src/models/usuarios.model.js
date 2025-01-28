@@ -14,7 +14,7 @@ const usuarioModel = mongoose.Schema(
     },
     Nombre: {
       type: String,
-      trim: true,
+      trim: true, 
       required: true,
     },
     Rol: {
@@ -28,23 +28,8 @@ const usuarioModel = mongoose.Schema(
       trim: true,
       required: true,
     },
-    Coordinacion: {
-      type: mongoose.Schema.Types.ObjectId,
-      trim: true,
-      required: true,
-    },
     isActive: {
       type: Boolean,
-      trim: true,
-      required: true,
-    },
-    Dependencia: {
-      type: mongoose.Schema.Types.ObjectId,
-      trim: true,
-      required: true,
-    },
-    Direccion_general: {
-      type: mongoose.Schema.Types.ObjectId,
       trim: true,
       required: true,
     },

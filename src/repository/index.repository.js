@@ -3,7 +3,7 @@ import ROLES from "../models/roles.model.js";
 import AREA from "../models/area.model.js"
 import DIRECCION_GENERAL from "../models/direccion_general.model.js";
 import COORDINACIONES from "../models/coordinaciones.model.js"
-import DEPENDENCIAS from "../models/dependencias.model.js"
+import DEPENDENCIA from "../models/dependencias.model.js"
 export const getInfoSelectsCrearUsuario = async () => {
   // Se agrego un gion bajo (_) al final del nombre de las constantes para evitar tener errores
   // con el nombre de los modelos
@@ -12,22 +12,13 @@ export const getInfoSelectsCrearUsuario = async () => {
       //DIRECCIONESGENERALES_,
       AREAS_,
       ROLES_,
-      DIRECCIONESGENERALES_,
-      COORDINACIONES_,
-      DEPENDENCIAS_,
     ] = await Promise.all([
       AREA.find(),
       ROLES.find(),
-      DIRECCION_GENERAL.find(),
-      COORDINACIONES.find(),
-      DEPENDENCIAS.find(),
     ]);
     return {
       areas: AREAS_,
-      direccion_generales: DIRECCIONESGENERALES_,
       roles: ROLES_,
-      coordinaciones: COORDINACIONES_,
-      dependencias: DEPENDENCIAS_,
     };
   } catch (error) {
     return false;
@@ -36,6 +27,7 @@ export const getInfoSelectsCrearUsuario = async () => {
 
 export const postRegistrarUsuario = async (body, Password) => {
   try {
+    console.log("Body que se esta guardando", body);
     const RES = new Usuario({
       ...body,
       Password,

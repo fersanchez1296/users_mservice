@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const dependenciasModel = mongoose.Schema(
+const dependenciaModel = mongoose.Schema(
     {
-      Dependencias: {
+      Dependencia: {
         type: String,
         trim: true,
         required: true,
@@ -13,4 +13,4 @@ const dependenciasModel = mongoose.Schema(
     }
   );
   
-  export default mongoose.model("DEPENDENCIAS", dependenciasModel, "Dependencias");
+  export default mongoose.model("DEPENDENCIA", dependenciaModel, "Dependencia");
