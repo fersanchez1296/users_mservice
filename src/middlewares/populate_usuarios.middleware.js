@@ -4,6 +4,8 @@ export const populateUsuarios = async (req, res) => {
   try {
     const POPULATE = await Usuarios.populate(req.usuarios, [
       { path: "Area", select: "Area _id" },
+      { path: "Rol", select: "Rol _id" },
+
     ]);
     if (!POPULATE) {
       return res.status(500).json({ desc: "Error al procesar los usuarios." });
