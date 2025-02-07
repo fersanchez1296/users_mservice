@@ -42,7 +42,7 @@ export const postRegistrarUsuario = async (body, Password) => {
 
 export const getUsuarios = async () => {
   try {
-    const RES = await Usuario.find().lean();
+    const RES = await Usuario.find({Username : {$ne: "standby"} }).lean();
     return RES;
   } catch (error) {
     return false;
