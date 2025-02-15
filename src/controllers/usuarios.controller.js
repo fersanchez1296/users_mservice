@@ -4,7 +4,8 @@ import {
   getUsuarios,
   updateEstadoUsusario,
   updateUser,
-  getInfoSelectsCrearUsuario
+  getInfoSelectsCrearUsuario,
+  getUsuariosPorAreaModerador,
 } from "../repository/index.repository.js";
 
 export const getRoles = async (req, res, next) => {
@@ -39,7 +40,7 @@ export const getArea = async (req, res) => {
 export const getInfoSelectsUsuarios = async (req, res) => {
   try {
     const dataSelects = await getInfoSelectsCrearUsuario();
-    console.log("datos de los selects", dataSelects)
+    console.log("datos de los selects", dataSelects);
     if (!dataSelects) {
       return res.status(404).json({ desc: "No se encontró información" });
     }
@@ -58,7 +59,9 @@ export const register = async (req, res, next) => {
   try {
     const newUsuario = await postRegistrarUsuario(req.body, hashedPassword);
     if (!newUsuario) {
-      return res.status(500).json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
+      return res
+        .status(500)
+        .json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
     }
     const correoData = {
       username: req.body.Username,
@@ -72,7 +75,6 @@ export const register = async (req, res, next) => {
     req.channel = "channel_crearUsuario";
     console.log("Se guardo el usuario");
     next();
-
   } catch (error) {
     console.error("Error al crear el usuario", error);
     res.status(500).json({ error: "Error al crear el usuario" });
@@ -115,10 +117,10 @@ export const actualizarestadoUsuario = async (req, res) => {
 export const actualizarUsuario = async (req, res) => {
   const userId = req.params.id;
   const updatedata = req.body;
-  console.log("Datos en la funcion actulizar usuario")
+  console.log("Datos en la funcion actulizar usuario");
   console.log("Datos a actualizar", updatedata);
   console.log("User id", userId);
-  console.log("-------------------------------------------")
+  console.log("-------------------------------------------");
   //console.log("Parametros en el controlador =>", userId, updatedata);
   try {
     const result = await updateUser(updatedata, userId);
@@ -128,10 +130,26 @@ export const actualizarUsuario = async (req, res) => {
         desc: "Ocurrio un error al actualizar el usuario",
       });
     }
-    return res
-      .status(200)
-      .json({ desc: "Usuario actualizado con exito" });
+    return res.status(200).json({ desc: "Usuario actualizado con exito" });
   } catch (error) {
     return res.status(500).json({ desc: "Error interno en el servidor" });
+  }
+};
+
+export const usuariosPorAreaModerador = async (req, res) => {
+  try {
+    const { userId, areas } = req.session.user;
+    console.log(userId, areas);
+    const result = await getUsuariosPorAreaModerador(userId, areas);
+    console.log("result en el controlador", result);
+    if (!result) {
+      return res.status(404).json({ desc: "No se encontraron resolutores." });
+    }
+    return res.status(200).json(result);
+  } catch (error) {
+    console.log("Error en el controlador", result);
+    return res.status(500).json({
+      desc: "Ocurrio un error al obtener los usuarios. Error interno en el servidor.",
+    });
   }
 };

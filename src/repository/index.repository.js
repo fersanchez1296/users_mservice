@@ -89,5 +89,22 @@ export const updateUser = async (updatedata, userId) => {
   }
 };
 
+export const getUsuariosPorAreaModerador = async (userId, areas) => {
+  try {
+    const result = await Usuario.find({
+      Area: { $in: [areas] },
+      _id: { $ne: userId },
+    }).select("Nombre _id");
+    console.log("result en el repositorio", result);
+    if (!result) {
+      return false;
+    }
+    return result;
+  } catch (error) {
+    console.log("error en el repositorio", error);
+    return false;
+  }
+};
+
 
 
