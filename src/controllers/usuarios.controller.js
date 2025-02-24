@@ -4,7 +4,7 @@ import {
   getUsuarios,
   updateEstadoUsusario,
   updateUser,
-  getInfoSelectsCrearUsuario,,
+  getInfoSelectsCrearUsuario,
   getUsuariosPorAreaModerador,
 } from "../repository/index.repository.js";
 
