@@ -4,7 +4,8 @@ import {
   getUsuarios,
   updateEstadoUsusario,
   updateUser,
-  getInfoSelectsCrearUsuario,
+  getInfoSelectsCrearUsuario,,
+  getUsuariosPorAreaModerador,
 } from "../repository/index.repository.js";
 
 export const getRoles = async (req, res, next) => {
@@ -127,5 +128,23 @@ export const actualizarUsuario = async (req, res, next) => {
     await session.abortTransaction();
     session.endSession();
     return res.status(500).json({ desc: "Error interno en el servidor" });
+  }
+};
+
+export const usuariosPorAreaModerador = async (req, res) => {
+  try {
+    const { userId, areas } = req.session.user;
+    console.log(userId, areas);
+    const result = await getUsuariosPorAreaModerador(userId, areas);
+    console.log("result en el controlador", result);
+    if (!result) {
+      return res.status(404).json({ desc: "No se encontraron resolutores." });
+    }
+    return res.status(200).json(result);
+  } catch (error) {
+    console.log("Error en el controlador", result);
+    return res.status(500).json({
+      desc: "Ocurrio un error al obtener los usuarios. Error interno en el servidor.",
+    });
   }
 };
