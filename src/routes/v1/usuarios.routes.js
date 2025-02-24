@@ -5,7 +5,7 @@ import {
   actualizarUsuario,
   actualizarestadoUsuario,
   getInfoSelectsUsuarios,
-  usuariosPorAreaModerador,,
+  usuariosPorAreaModerador,
 } from "../../controllers/usuarios.controller.js";
 import { validateData } from "../../middlewares/validate_data.middleware.js";
 import { verifyToken } from "../../middlewares/verify_token.middleware.js";
