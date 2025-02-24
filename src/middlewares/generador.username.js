@@ -3,7 +3,7 @@ export const generateUsername = (req, res, next) => {
         const { Nombre } = req.body;
 
         if (!Nombre) {
-            return res.status(400).json({ error: "El campo 'Nombre' es obligatorio." });
+            return res.status(400).json({ desc: "El campo 'Nombre' es obligatorio." });
         }
 
         // Divide el nombre en palabras
@@ -26,8 +26,8 @@ export const generateUsername = (req, res, next) => {
         const username = `${firstInitial}${formattedLastName}${randomNumbers}`;
 
         req.body.Username = username; // Agrega el username al cuerpo de la solicitud
-        next(); // Pasa al siguiente middleware o controlador
+        return next(); // Pasa al siguiente middleware o controlador
     } catch (error) {
-        res.status(500).json({ error: "Error al generar el username." });
+        return res.status(500).json({ desc: "Error al generar el username." });
     }
 };

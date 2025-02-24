@@ -36,7 +36,7 @@ const usuarioModel = mongoose.Schema(
     isActive: {
       type: Boolean,
       trim: true,
-      required: true,
+      default: true,
     },
   },
   {

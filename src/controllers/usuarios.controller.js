@@ -4,20 +4,17 @@ import {
   getUsuarios,
   updateEstadoUsusario,
   updateUser,
-  getInfoSelectsCrearUsuario
+  getInfoSelectsCrearUsuario,
 } from "../repository/index.repository.js";
 
 export const getRoles = async (req, res, next) => {
   try {
     const rolesData = await getInfoSelectRoles();
-    console.log(rolesData);
     if (!rolesData) {
       return res.status(404).json({ desc: "No se encontró información" });
     }
     return res.status(200).json(rolesData);
-    next();
   } catch (error) {
-    console.error("Error fetching data:", error);
     res.status(500).json({ error: "Error fetching data" });
   }
 };
@@ -25,69 +22,70 @@ export const getRoles = async (req, res, next) => {
 export const getArea = async (req, res) => {
   try {
     const areaData = await getInfoSelectArea();
-    console.log(areaData);
     if (!areaData) {
       return res.status(404).json({ desc: "No se encontró información" });
     }
     return res.status(200).json(areaData);
   } catch (error) {
-    console.error("Error fetching data:", error);
-    res.status(500).json({ error: "Error fetching data" });
+    return res.status(500).json({ error: "Error fetching data" });
   }
 };
 
 export const getInfoSelectsUsuarios = async (req, res) => {
   try {
     const dataSelects = await getInfoSelectsCrearUsuario();
-    console.log("datos de los selects", dataSelects)
     if (!dataSelects) {
       return res.status(404).json({ desc: "No se encontró información" });
     }
     return res.status(200).json(dataSelects);
   } catch (error) {
-    console.error("Error fetching data:", error);
-    res.status(500).json({ error: "Error fetching data" });
+    return res.status(500).json({ error: "Error fetching data" });
   }
 };
 
 export const register = async (req, res, next) => {
-  const { user } = req.session;
-  if (!user) return res.status(403).json({ desc: "Acceso no autorizado" });
-  const pass = req.body.Password;
-  const hashedPassword = await encryptPassword(pass);
+  const session = req.mongoSession;
   try {
-    const newUsuario = await postRegistrarUsuario(req.body, hashedPassword);
+    const pass = req.body.Password;
+    const hashedPassword = await encryptPassword(pass);
+    const newUsuario = await postRegistrarUsuario(
+      req.body,
+      hashedPassword,
+      session
+    );
     if (!newUsuario) {
-      return res.status(500).json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
+      await session.abortTransaction();
+      session.endSession();
+      return res
+        .status(500)
+        .json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
     }
     const correoData = {
       username: req.body.Username,
       correoDestinatario: req.body.Correo,
-      //correoRemitente: user.correo,
       nombreUsuario: req.body.Nombre,
       password: req.body.Password,
     };
-    console.log("Correo Data", correoData);
     req.correoData = correoData;
     req.channel = "channel_crearUsuario";
-    console.log("Se guardo el usuario");
-    next();
-
+    return next();
   } catch (error) {
-    console.error("Error al crear el usuario", error);
-    res.status(500).json({ error: "Error al crear el usuario" });
+    console.log(error);
+    await session.abortTransaction();
+    session.endSession();
+    return res.status(500).json({ error: "Error al crear el usuario" });
   }
 };
 
 export const obtenerUsuarios = async (req, res, next) => {
   try {
-    const usuarios = await getUsuarios();
-    // console.log(usuarios);
+    const { userId } = req.session.user;
+    const usuarios = await getUsuarios(userId);
     if (!usuarios) {
       return res.status(404).json({ desc: "No se encontraron usuarios" });
     }
     req.usuarios = usuarios;
-    next();
+    return next();
   } catch (error) {
     return res.status(500).json({ desc: "Error interno en el servidor" });
   }
@@ -96,7 +94,6 @@ export const obtenerUsuarios = async (req, res, next) => {
 export const actualizarestadoUsuario = async (req, res) => {
   const userId = req.params.id;
   const { estado } = req.body;
-  console.log("Parametros en el controlador =>", userId, estado);
   try {
     const result = await updateEstadoUsusario(estado, userId);
     if (!result) {
@@ -112,26 +109,23 @@ export const actualizarestadoUsuario = async (req, res) => {
   }
 };
 
-export const actualizarUsuario = async (req, res) => {
-  const userId = req.params.id;
-  const updatedata = req.body;
-  console.log("Datos en la funcion actulizar usuario")
-  console.log("Datos a actualizar", updatedata);
-  console.log("User id", userId);
-  console.log("-------------------------------------------")
-  //console.log("Parametros en el controlador =>", userId, updatedata);
+export const actualizarUsuario = async (req, res, next) => {
+  const session = req.mongoSession;
   try {
-    const result = await updateUser(updatedata, userId);
+    const userId = req.params.id;
+    const updatedata = req.body;
+    const result = await updateUser(updatedata, userId, session);
     if (!result) {
-      console.log("No se pudo actualizar", updatedata);
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({
         desc: "Ocurrio un error al actualizar el usuario",
       });
     }
-    return res
-      .status(200)
-      .json({ desc: "Usuario actualizado con exito" });
+    return next();
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     return res.status(500).json({ desc: "Error interno en el servidor" });
   }
 };
