@@ -10,9 +10,13 @@ export const generatePassword = (req, res, next) => {
         .json({ desc: "El campo 'Nombre' es obligatorio" });
     }
 
-    // Obtener las palabras del nombre
-    const words = Nombre.split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalizar palabras
+    const normalizedNombre = Nombre.normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ñ/g, "n")
+      .replace(/Ñ/g, "N");
+    const words = normalizedNombre
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .filter((word) => word.length > 0); // Eliminar posibles palabras vacías
 
     if (words.length === 0) {
@@ -21,30 +25,17 @@ export const generatePassword = (req, res, next) => {
         .json({ desc: "El campo 'Nombre' debe contener palabras válidas" });
     }
 
-    // Mezclar las palabras de manera aleatoria
     const shuffledWords = words.sort(() => Math.random() - 0.5);
-
-    // Tomar hasta dos palabras mezcladas y combinarlas
     const nameBase = shuffledWords.slice(0, 2).join("");
-
-    // Generar números aleatorios
-    const randomNumbers = crypto.randomInt(10, 99); // Números aleatorios de 2 dígitos
-
-    // Lista de símbolos permitidos
+    const randomNumbers = crypto.randomInt(10, 99);
     const symbols = ["-", "#", "$", "_", "*", "!"];
-    const randomSymbol = symbols[crypto.randomInt(0, symbols.length)]; // Símbolo aleatorio
-
-    // Crear la contraseña combinando las palabras mezcladas, un número y un símbolo
+    const randomSymbol = symbols[crypto.randomInt(0, symbols.length)];
     const generatedPassword = `${nameBase}${randomNumbers}${randomSymbol}`;
-
     req.body.Password = generatedPassword;
-
     return next();
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        desc: "Error al generar contraseña. Error interno en el servidor",
-      });
+    return res.status(500).json({
+      desc: "Error al generar contraseña. Error interno en el servidor",
+    });
   }
 };
