@@ -17,9 +17,7 @@ export const generateUsername = (req, res, next) => {
         const nameParts = Nombre.split(" ");
 
         if (nameParts.length < 2) {
-            return res.status(400).json({
-                error: "El 'Nombre' debe incluir al menos un nombre y un apellido.",
-            });
+            return res.status(400).json({ desc: "Nombre' debe incluir al menos un nombre y un apellido." });
         }
 
         // Toma el primer nombre y el primer apellido
@@ -37,6 +35,6 @@ export const generateUsername = (req, res, next) => {
         req.body.Username = username; // Agrega el username al cuerpo de la solicitud
         return next(); // Pasa al siguiente middleware o controlador
     } catch (error) {
-        return res.status(500).json({ desc: "Error al generar el username." });
+        return res.status(500).json({ desc: "Error interno en el servidor." });
     }
 };

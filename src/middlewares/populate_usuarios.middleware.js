@@ -11,6 +11,6 @@ export const populateUsuarios = async (req, res) => {
     }
     return res.status(200).json(POPULATE);
   } catch (error) {
-    return res.status(500).json({ desc: "Error al formatear los usuarios." });
+    return res.status(500).json({ desc: "Error interno en el servidor" });
   }
 };
