@@ -1,4 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+
+const ticketResueltosSchema = new Schema({
+  a_tiempo: { type: Number },
+  fuera_tiempo: { type: Number },
+});
 
 const usuarioModel = mongoose.Schema(
   {
@@ -14,7 +19,7 @@ const usuarioModel = mongoose.Schema(
     },
     Nombre: {
       type: String,
-      trim: true, 
+      trim: true,
       required: true,
     },
     Rol: {
@@ -37,6 +42,10 @@ const usuarioModel = mongoose.Schema(
       type: Boolean,
       trim: true,
       default: true,
+    },
+    Tickets_resueltos: {
+      type: ticketResueltosSchema,
+      default: 0,
     },
   },
   {
