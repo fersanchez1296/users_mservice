@@ -20,7 +20,10 @@ export const postRegistrarUsuario = async (body, Password, session) => {
       Password,
     });
     const savedUser = await result.save({ session, returnDocument: "after" });
-    return savedUser || false;
+    if (!savedUser) {
+      return false;
+    }
+    return savedUser;
   } catch (error) {
     return false;
   }
@@ -83,6 +86,3 @@ export const getUsuariosPorAreaModerador = async (userId, areas) => {
     return false;
   }
 };
-
-
-
