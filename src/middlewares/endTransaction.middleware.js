@@ -7,7 +7,7 @@ export async function endTransaction(req, res, next) {
       req.mongoSession.endSession();
       return next();
     } catch (error) {
-      console.error("Error en la transacción:", error);
+      console.log("Error en la transacción");
   
       if (req.mongoSession) {
         await req.mongoSession.abortTransaction();

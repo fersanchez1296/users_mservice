@@ -35,7 +35,7 @@ export const generatePassword = (req, res, next) => {
     return next();
   } catch (error) {
     return res.status(500).json({
-      desc: "Error al generar contraseña. Error interno en el servidor",
+      desc: "Error interno en el servidor",
     });
   }
 };

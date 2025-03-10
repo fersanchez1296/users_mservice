@@ -20,6 +20,6 @@ export const enviarCorreo = async (req, res) => {
 
     return res.status(200).json({ desc: "Se creó el usuario y se notificó vía Email" });
   } catch (error) {
-    return res.status(500).json({ error: "Error al enviar el correo" });
+    return res.status(500).json({ desc: "Error al enviar el correo" });
   }
 };
