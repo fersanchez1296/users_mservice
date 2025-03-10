@@ -20,11 +20,13 @@ export const postRegistrarUsuario = async (body, Password, session) => {
       Password,
     });
     const savedUser = await result.save({ session, returnDocument: "after" });
+    console.log(savedUser);
     if (!savedUser) {
       return false;
     }
     return savedUser;
   } catch (error) {
+    console.log(error);
     return false;
   }
 };

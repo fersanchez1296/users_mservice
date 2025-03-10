@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
 const ticketResueltosSchema = new Schema({
-  a_tiempo: { type: Number },
-  fuera_tiempo: { type: Number },
+  a_tiempo: { type: Number, default: 0 },
+  fuera_tiempo: { type: Number, default: 0 },
 });
 
 const usuarioModel = mongoose.Schema(
@@ -45,11 +45,11 @@ const usuarioModel = mongoose.Schema(
     },
     Tickets_resueltos: {
       type: ticketResueltosSchema,
-      default: 0,
+      default: () => ({ a_tiempo: 0, fuera_tiempo: 0 }),
     },
   },
   {
-    timesStampes: true,
+    timestamps: true, // Corrección del typo en 'timesStampes'
   }
 );
 
