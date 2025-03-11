@@ -69,7 +69,6 @@ export const register = async (req, res, next) => {
     req.channel = "channel_crearUsuario";
     return next();
   } catch (error) {
-    console.log(error);
     await session.abortTransaction();
     session.endSession();
     return res.status(500).json({ desc: "Error interno en el servidor" });
