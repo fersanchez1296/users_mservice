@@ -6,6 +6,7 @@ import {
   updateUser,
   getInfoSelectsCrearUsuario,
   getUsuariosPorAreaModerador,
+  getResolutoresPorArea
 } from "../repository/index.repository.js";
 
 export const getRoles = async (req, res, next) => {
@@ -137,3 +138,16 @@ export const usuariosPorAreaModerador = async (req, res) => {
     return res.status(500).json({ desc: "Error interno en el servidor" });
   }
 };
+
+
+export const resolutoresPorArea = async(req, res) => {
+  try {
+    const result = await getResolutoresPorArea();
+    if(!result){
+      return res.status(404).json({desc: "No se encontraron resolutores."})
+    }
+    return res.status(200).json({result});
+  } catch (error) {
+    return res.status(500).json({desc: "Error al obtener los resolutores."})
+  }
+}

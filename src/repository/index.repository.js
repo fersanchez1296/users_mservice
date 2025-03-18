@@ -88,3 +88,28 @@ export const getUsuariosPorAreaModerador = async (userId, areas) => {
     return false;
   }
 };
+
+export const getResolutoresPorArea = async (
+) => {
+  try {
+    const areas = await AREA.find();
+
+    const resolutores = await Promise.all(
+      areas.map(async (area) => {
+        const resolutor = await Usuario.find({
+          Area: new ObjectId(area._id),
+          isActive: true,
+        }).select("Nombre Correo");
+        return {
+          area: { area: area.Area, _id: area._id },
+          resolutores: resolutor,
+        };
+      })
+    );
+    return {
+      areasResolutores: resolutores,
+    };
+  } catch (error) {
+    return false;
+  }
+};

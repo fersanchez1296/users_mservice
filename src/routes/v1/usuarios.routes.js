@@ -6,6 +6,7 @@ import {
   actualizarestadoUsuario,
   getInfoSelectsUsuarios,
   usuariosPorAreaModerador,
+  resolutoresPorArea
 } from "../../controllers/usuarios.controller.js";
 import { validateData } from "../../middlewares/validate_data.middleware.js";
 import { verifyToken } from "../../middlewares/verify_token.middleware.js";
@@ -70,5 +71,12 @@ router.get("/users/usuarios_area",
   verifyToken,
   verifyRole(["Moderador"]),
   usuariosPorAreaModerador,
+);
+
+router.get(
+  "/users/resolutores",
+  verifyToken,
+  verifyRole(["Root", "Administrador"]),
+  resolutoresPorArea
 );
 export default router;
