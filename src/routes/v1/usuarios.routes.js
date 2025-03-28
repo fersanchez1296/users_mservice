@@ -69,7 +69,7 @@ router.get(
 
 router.get("/users/usuarios_area",
   verifyToken,
-  verifyRole(["Moderador"]),
+  verifyRole(["Moderador", "Auditor"]),
   usuariosPorAreaModerador,
 );
 
