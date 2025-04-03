@@ -106,7 +106,7 @@ export const actualizarestadoUsuario = async (req, res) => {
   }
 };
 
-export const actualizarUsuario = async (req, res, next) => {
+export const actualizarUsuario = async (req, res, next) => { 
   const session = req.mongoSession;
   try {
     const userId = req.params.id;
