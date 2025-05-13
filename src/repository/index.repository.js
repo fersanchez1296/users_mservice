@@ -1,12 +1,18 @@
 import Usuario from "../models/usuarios.model.js";
 import ROLES from "../models/roles.model.js";
 import AREA from "../models/area.model.js";
+import DIRECCION_GENERAL from "../models/direccion_general.model.js";
 export const getInfoSelectsCrearUsuario = async () => {
   try {
-    const [AREAS_, ROLES_] = await Promise.all([AREA.find(), ROLES.find()]);
+    const [AREAS_, ROLES_, DIRECCIONES_] = await Promise.all([
+      AREA.find(),
+      ROLES.find(),
+      DIRECCION_GENERAL.find(),
+    ]);
     return {
       areas: AREAS_,
       roles: ROLES_,
+      direcciones_generales: DIRECCIONES_,
     };
   } catch (error) {
     return false;
@@ -63,11 +69,13 @@ export const updateUser = async (updatedata, userId, session) => {
       { $set: { ...updatedata } },
       { session, returnDocument: "after" }
     );
+    console.log("Este es el updatedUser del repositorio", updatedUser);
     if (!updatedUser) {
       return false;
     }
     return updatedUser;
   } catch (error) {
+    console.log(error);
     return false;
   }
 };
@@ -87,8 +95,7 @@ export const getUsuariosPorAreaModerador = async (userId, areas) => {
   }
 };
 
-export const getResolutoresPorArea = async (
-) => {
+export const getResolutoresPorArea = async () => {
   try {
     const areas = await AREA.find();
 

@@ -6,7 +6,7 @@ import {
   updateUser,
   getInfoSelectsCrearUsuario,
   getUsuariosPorAreaModerador,
-  getResolutoresPorArea
+  getResolutoresPorArea,
 } from "../repository/index.repository.js";
 
 export const getRoles = async (req, res, next) => {
@@ -58,7 +58,9 @@ export const register = async (req, res, next) => {
     if (!newUsuario) {
       await session.abortTransaction();
       session.endSession();
-      return res.status(404).json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
+      return res
+        .status(404)
+        .json({ desc: "Error al registrar el usuario. Inténtalo más tarde" });
     }
     const correoData = {
       username: req.body.Username,
@@ -96,7 +98,9 @@ export const actualizarestadoUsuario = async (req, res) => {
   try {
     const result = await updateEstadoUsusario(estado, userId);
     if (!result) {
-      return res.status(404).json({ desc: "Ocurrio un error al actualizar el estado del usuario" });
+      return res
+        .status(404)
+        .json({ desc: "Ocurrio un error al actualizar el estado del usuario" });
     }
     return res
       .status(200)
@@ -106,16 +110,20 @@ export const actualizarestadoUsuario = async (req, res) => {
   }
 };
 
-export const actualizarUsuario = async (req, res, next) => { 
+export const actualizarUsuario = async (req, res, next) => {
   const session = req.mongoSession;
   try {
     const userId = req.params.id;
     const updatedata = req.body;
+    console.log("Este es el body", req.body);
     const result = await updateUser(updatedata, userId, session);
+    console.log("Este es el resultado del repositorio", result);
     if (!result) {
       await session.abortTransaction();
       session.endSession();
-      return res.status(404).json({ desc: "Ocurrio un error al actualizar el usuario" });
+      return res
+        .status(404)
+        .json({ desc: "Ocurrio un error al actualizar el usuario" });
     }
     return next();
   } catch (error) {
@@ -138,15 +146,14 @@ export const usuariosPorAreaModerador = async (req, res) => {
   }
 };
 
-
-export const resolutoresPorArea = async(req, res) => {
+export const resolutoresPorArea = async (req, res) => {
   try {
     const result = await getResolutoresPorArea();
-    if(!result){
-      return res.status(404).json({desc: "No se encontraron resolutores."})
+    if (!result) {
+      return res.status(404).json({ desc: "No se encontraron resolutores." });
     }
-    return res.status(200).json({result});
+    return res.status(200).json({ result });
   } catch (error) {
-    return res.status(500).json({desc: "Error al obtener los resolutores."})
+    return res.status(500).json({ desc: "Error al obtener los resolutores." });
   }
-}
+};
